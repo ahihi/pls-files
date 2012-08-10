@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from ConfigParser import SafeConfigParser
 from contextlib import closing
 from os.path import dirname, join
