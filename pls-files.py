@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from ConfigParser import SafeConfigParser
 from contextlib import closing
-from os.path import dirname, join
+from os.path import basename, dirname, join
 import sys
 from urllib2 import urlopen
 
@@ -29,5 +29,5 @@ if len(sys.argv) > 1:
             except Exception, e:
                 print >> sys.stderr, "%s\n    [%s] %s" % (arg, type(e).__name__, e)
 else:
-    print >> sys.stderr, "Usage: %s file-or-url [file-or-url ...]" % sys.argv[0]
+    print >> sys.stderr, "Usage: %s file-or-url [file-or-url ...]" % basename(sys.argv[0])
     sys.exit(1)
