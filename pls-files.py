@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from ConfigParser import SafeConfigParser
 from contextlib import closing
-from os.path import basename, dirname, join
+from os.path import basename, dirname, join, normpath, realpath
 import sys
 from urllib2 import urlopen
 
@@ -9,6 +9,7 @@ def generic_open(arg):
     try:
         return urlopen(arg), None
     except ValueError:
+        arg = normpath(realpath(arg))
         return open(arg, "r"), dirname(arg)
 
 def playlist_files(config):
