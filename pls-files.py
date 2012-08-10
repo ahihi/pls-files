@@ -29,5 +29,5 @@ if len(sys.argv) > 1:
             except Exception, e:
                 print >> sys.stderr, "%s\n    [%s] %s" % (arg, type(e).__name__, e)
 else:
-    print >> sys.stderr, "Usage: %s file-or-url [file-or-url ...]"
+    print >> sys.stderr, "Usage: %s file-or-url [file-or-url ...]" % sys.argv[0]
     sys.exit(1)
