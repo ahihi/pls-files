@@ -32,10 +32,14 @@ def playlist_files(config):
     for i in xrange(1, n+1):
         yield config.get("playlist", "File%d" % i)
 
-parser = argparse.ArgumentParser(description = "dfsdfsdf")
+parser = argparse.ArgumentParser()
 parser.add_argument("--mpc", dest = "mpc", action = "store_const", const = True, default = False)
+parser.add_argument("--encoding", dest = "encodings", metavar = "encoding1,encoding2,...", action = "store")
 parser.add_argument("paths", metavar = "path-or-URL", nargs = "+")
 args = parser.parse_args()
+
+if args.encodings != None:
+    ENCODINGS = args.encodings.split(",")
 
 config = ConfigParser()
 for path in args.paths:
