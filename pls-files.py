@@ -6,7 +6,7 @@ from os.path import dirname, join, normpath, realpath
 import sys
 from urllib2 import urlopen
 
-encodings = ("utf-8", "iso-8859-1")
+DEFAULT_ENCODINGS = "utf-8,iso-8859-1"
 
 def read_pls(path):
     try:
@@ -32,14 +32,26 @@ def playlist_files(config):
     for i in xrange(1, n+1):
         yield config.get("playlist", "File%d" % i)
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--mpc", dest = "mpc", action = "store_const", const = True, default = False)
-parser.add_argument("--encoding", dest = "encodings", metavar = "encoding1,encoding2,...", action = "store")
-parser.add_argument("paths", metavar = "path-or-URL", nargs = "+")
+parser = argparse.ArgumentParser(description = "Print the playlist items in .pls files.")
+parser.add_argument("--mpc",
+    dest = "mpc",
+    action = "store_const",
+    const = True,
+    default = False,
+    help = "print items in a format compatible with `mpc add`")
+parser.add_argument("--encoding",
+    dest = "encodings",
+    metavar = "encoding1,encoding2,...",
+    action = "store",
+    default = DEFAULT_ENCODINGS,
+    help = "character encodings to try (default: %s)" % DEFAULT_ENCODINGS)
+parser.add_argument("paths",
+    metavar = "path-or-URL",
+    nargs = "+",
+    help = "file system path or URL to a .pls file")
 args = parser.parse_args()
 
-if args.encodings != None:
-    encodings = args.encodings.split(",")
+encodings = args.encodings.split(",")
 
 config = ConfigParser()
 for path in args.paths:
