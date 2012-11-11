@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import argparse
 from ConfigParser import SafeConfigParser
 from contextlib import closing
 from os.path import basename, dirname, join, normpath, realpath
@@ -17,18 +18,18 @@ def playlist_files(config):
     for i in xrange(1, n+1):
         yield config.get("playlist", "File%d" % i)
 
-if len(sys.argv) > 1:
-    config = SafeConfigParser()
-    for arg in sys.argv[1:]:
-        raw_handle, directory = generic_open(arg)
-        with closing(raw_handle) as handle:
-            try:
-                config.readfp(handle)
-                for raw_fn in playlist_files(config):
-                    fn = "file://" + join(directory, raw_fn) if directory != None else raw_fn
-                    print fn
-            except Exception, e:
-                print >> sys.stderr, "%s\n    [%s] %s" % (arg, type(e).__name__, e)
-else:
-    print >> sys.stderr, "Usage: %s file-or-url [file-or-url ...]" % basename(sys.argv[0])
-    sys.exit(1)
+parser = argparse.ArgumentParser(description = "dfsdfsdf")
+parser.add_argument("paths", metavar = "path-or-URL", nargs = "+")
+args = parser.parse_args()
+
+config = SafeConfigParser()
+for path in args.paths:
+    raw_handle, directory = generic_open(path)
+    with closing(raw_handle) as handle:
+        try:
+            config.readfp(handle)
+            for raw_fn in playlist_files(config):
+                fn = "file://" + join(directory, raw_fn) if directory != None else raw_fn
+                print fn
+        except Exception, e:
+            print >> sys.stderr, "%s\n    [%s] %s" % (arg, type(e).__name__, e)
