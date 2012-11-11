@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import argparse
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 from contextlib import closing
 from os.path import basename, dirname, join, normpath, realpath
 import sys
@@ -19,6 +19,7 @@ def playlist_files(config):
         yield config.get("playlist", "File%d" % i)
 
 parser = argparse.ArgumentParser(description = "dfsdfsdf")
+parser.add_argument("--mpc", dest = "mpc", action = "store_const", const = True, default = False)
 parser.add_argument("paths", metavar = "path-or-URL", nargs = "+")
 args = parser.parse_args()
 
@@ -29,7 +30,9 @@ for path in args.paths:
         try:
             config.readfp(handle)
             for raw_fn in playlist_files(config):
-                fn = "file://" + join(directory, raw_fn) if directory != None else raw_fn
+                fn = join(directory, raw_fn) if directory != None else raw_fn
+                if args.mpc and directory != None:
+                    fn = "file://" + fn
                 print fn
         except Exception, e:
-            print >> sys.stderr, "%s\n    [%s] %s" % (arg, type(e).__name__, e)
+            print >> sys.stderr, "%s\n    [%s] %s" % (path, type(e).__name__, e)
