@@ -6,7 +6,7 @@ from os.path import dirname, join, normpath, realpath
 import sys
 from urllib2 import urlopen
 
-ENCODINGS = ("utf-8", "iso-8859-1")
+encodings = ("utf-8", "iso-8859-1")
 
 def read_pls(path):
     try:
@@ -19,7 +19,7 @@ def read_pls(path):
 
 def decode(text):
     result = None
-    for enc in ENCODINGS:
+    for enc in encodings:
         try:
             result = text.decode(enc)
             break
@@ -39,7 +39,7 @@ parser.add_argument("paths", metavar = "path-or-URL", nargs = "+")
 args = parser.parse_args()
 
 if args.encodings != None:
-    ENCODINGS = args.encodings.split(",")
+    encodings = args.encodings.split(",")
 
 config = ConfigParser()
 for path in args.paths:
@@ -54,6 +54,6 @@ for path in args.paths:
                     fn = "file://" + fn
                 print fn
         else:
-            print >> sys.stderr, "%s\n    Failed to decode file (tried %s)" % (path, ", ".join(ENCODINGS))
+            print >> sys.stderr, "%s\n    Failed to decode file (tried %s)" % (path, ", ".join(encodings))
     except Exception, e:
         print >> sys.stderr, "%s\n    [%s] %s" % (path, type(e).__name__, e)
