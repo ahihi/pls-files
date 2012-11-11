@@ -2,6 +2,12 @@
 
 This script will list the audio files/streams in the given .pls playlist(s), optionally in a format that can be piped directly to `mpc add` (use the `--mpc` flag).
 
+## Requirements
+
+- [Python](http://python.org/) (tested on 2.6 and 2.7)
+- [argparse](http://code.google.com/p/argparse/) (in the standard library since 2.7)
+- [configparser](http://pypi.python.org/pypi/configparser)
+
 ## Examples
 
     monogram:~ ahihi$ pls-files Foldplop\ -\ Totem\ EP/playlist.pls 
