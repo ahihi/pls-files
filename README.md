@@ -25,7 +25,3 @@ This script will list the audio files/streams in the given .pls playlist(s), opt
     adding: file:///Users/ahihi/Foldplop - Totem EP/03 Blossom.flac
     adding: file:///Users/ahihi/Foldplop - Totem EP/04 Unwind.flac
     adding: http://radio1.radiohelsinki.fi/rh256
-
-## License
-
-Public domain.
