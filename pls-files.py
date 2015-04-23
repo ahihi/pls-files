@@ -3,19 +3,24 @@ import argparse
 from configparser import ConfigParser
 from contextlib import closing
 from os.path import dirname, join, normpath, realpath
+import re
 import sys
 from urllib2 import urlopen
 
 DEFAULT_ENCODINGS = "utf-8,iso-8859-1"
+URL_RE = re.compile(r"^[a-z0-9+.-]+:", re.IGNORECASE)
 
 def read_pls(path):
-    try:
-        with closing(urlopen(path)) as resp:
-            return resp.read(), None
-    except ValueError:
-        the_path = normpath(realpath(path))
-        with open(the_path, "r") as fh:
-            return fh.read(), dirname(the_path)
+    if path == "-":
+        return sys.stdin.read(), None
+    else:
+        try:
+            with closing(urlopen(path)) as resp:
+                return resp.read(), None
+        except ValueError:
+            the_path = normpath(realpath(path))
+            with open(the_path, "r") as fh:
+                return fh.read(), dirname(the_path)
 
 def decode(text):
     result = None
@@ -54,14 +59,23 @@ args = parser.parse_args()
 encodings = args.encodings.split(",")
 
 config = ConfigParser()
+stdin_data = None
 for path in args.paths:
     try:
-        pls_bytes, directory = read_pls(path)
+        if path == "-":
+            if stdin_data == None:
+                stdin_data = read_pls(path)
+            pls_bytes, directory = stdin_data
+        else:
+            pls_bytes, directory = read_pls(path)
+
         pls = decode(pls_bytes)
         if pls != None:
             config.read_string(pls)
             for raw_fn in playlist_files(config):
-                fn = join(directory, raw_fn) if directory != None else raw_fn
+                is_fspath = not URL_RE.match(raw_fn)
+                has_dir = directory != None
+                fn = join(directory, raw_fn) if is_fspath and has_dir else raw_fn
                 if args.mpc and directory != None:
                     fn = "file://" + fn
                 print fn
